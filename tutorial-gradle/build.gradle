@@ -1,0 +1,30 @@
+apply plugin: 'java' // adiciona os comandos java
+
+ext {
+    // cria uma variavel mainClass com o valor do caminho da main
+    mainClass = 'br.com.daads.gradle.Main' 
+}
+
+// cria uma task para executar o código
+task runApp (type: JavaExec) {
+    // adiciona o classpath na build
+    classpath = sourceSets.main.runtimeClasspath 
+    main = mainClass
+}
+
+// organiza os repositórios de onde serão baixados os jars
+repositories {
+    mavenCentral()
+}
+
+// organiza todas as depedências
+dependencies {
+    compile 'com.google.code.gson:gson:2.8.6'
+}
+
+// cria o jar
+jar {
+    manifest.attributes 'Main-Class': mainClass
+    // essa linha faz o jar ser fat jar
+    from { configurations.compile.collect { zipTree(it) } }
+}
